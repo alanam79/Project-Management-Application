@@ -1,5 +1,9 @@
 const { projects, clients } = require("../sampleData.js");
 
+// mongoose models
+const Project = require("../models/Project");
+const Client = require("../models/Client");
+
 const {
   GraphQLObjectType,
   GraphQLID,
@@ -19,8 +23,9 @@ const ProjectType = new GraphQLObjectType({
     client: {
       type: ClientType,
       resolve(parent, args) {
-        // return the client id when it matches the project (or parent) clientid
-        return clients.find((client) => client.id === parent.clientId);
+        // belowreturn the client id when it matches the project (or parent) clientid
+        // return clients.find((client) => client.id === parent.clientId); <- using sample data
+        return Client.findById(parent.clientId);
       },
     },
   }),
@@ -45,7 +50,8 @@ const RootQuery = new GraphQLObjectType({
     projects: {
       type: new GraphQLList(ProjectType),
       resolve(parent, args) {
-        return projects;
+        // return projects; <- using sample data
+        return Project.find(); // using mongoose model
       },
     },
     // get one project
@@ -55,14 +61,16 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       // response obtained by using resolver
       resolve(parent, args) {
-        return projects.find((project) => project.id === args.id);
+        // return projects.find((project) => project.id === args.id); <- using sample data
+        return Project.findById(args.id); // using mongoose model and args from above
       },
     },
     // get all clients
     clients: {
       type: new GraphQLList(ClientType),
       resolve(parent, args) {
-        return clients;
+        // return clients; <- using sample data
+        return Client.find();
       },
     },
     // get one client
@@ -72,7 +80,8 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       // response obtained by using resolver
       resolve(parent, args) {
-        return clients.find((client) => client.id === args.id);
+        // return clients.find((client) => client.id === args.id); <- using sample data
+        return Client.findById(args.id); // using mongoose model and args from above
       },
     },
   },
