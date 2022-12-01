@@ -1,4 +1,5 @@
 import { FaTrash } from "react-icons/fa";
+import DELETE_CLIENT from "../mutations/clientMutations";
 
 export default function ClientRow({ client }) {
   return (
